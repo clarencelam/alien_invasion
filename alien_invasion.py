@@ -124,8 +124,10 @@ class AlienInvasion:
 		for bullet in self.bullets.copy(): # we can't use the real bullets list because python expects a list to stay the same when a loop is running
 			if bullet.rect.bottom <= 0:
 				self.bullets.remove(bullet)
-		# print(len(self.bullets)) ----- deleted this line as it is only useful to see if the above loop works to delete bullets (it works)
 
+		# Check for any bullets that have hit aliens. If so, get rid of the bullet and alien
+		collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
+		
 	def _update_aliens(self):
 		""" check if the Fleet is at an edge. Then update positions of all aliens in the fleet"""
 		self._check_fleet_edges()
