@@ -114,6 +114,16 @@ class AlienInvasion:
 			new_bullet = Bullet(self) #making a bullet instance
 			self.bullets.add(new_bullet)
 
+	def _check_bullet_alien_collisions(self):
+		""" Respond to bullet-alien collisions"""
+		collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,False,True)
+
+		if not self.aliens:
+			# destroy existing bullets and create new fleet
+			# not -> True if the statement is False, Flase if statement is True
+			self.bullets.empty()
+			self._create_fleet()
+
 
 	def _update_bullets(self):
 		""" Update the position of bullets and get rid of old bullets"""
@@ -125,18 +135,16 @@ class AlienInvasion:
 			if bullet.rect.bottom <= 0:
 				self.bullets.remove(bullet)
 
-		# Check for any bullets that have hit aliens. If so, get rid of the bullet and alien
-		collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
-
-		if not self.aliens:
-			# not -> True if the statement is False, Flase if statement is True
-			self.bullets.empty()
-			self._create_fleet()
+		self._check_bullet_alien_collisions()
 
 	def _update_aliens(self):
 		""" check if the Fleet is at an edge. Then update positions of all aliens in the fleet"""
 		self._check_fleet_edges()
 		self.aliens.update()
+
+		# Look for alien-ship collisions
+		if pygame.sprite.spritecollideany(self.ship, self.aliens):
+			print("Ship hit!!!")
 
 	def _update_screen(self):
 		"""update images on the screen, and flip to the new screen"""
