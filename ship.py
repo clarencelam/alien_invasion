@@ -33,8 +33,13 @@ class Ship:
 		if self.moving_left and self.rect.left > 0:
 			self.x -= self.settings.ship_speed
 
-		# Update rect object from self.x===
+		# Update rect object from self.x
 		self.rect.x = self.x
+
+	def center_ship(self):
+		""" center the ship to the screen"""
+		self.rect.midbottom = self.screen_rect.midbottom
+		self.x = float(self.rect.x) #resets the self.x attribute so the ships exact position is accurate
 
 	def blitme(self):
 		"""Draw the ship at its current position"""
