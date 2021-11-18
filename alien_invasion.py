@@ -8,6 +8,7 @@ from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
 from button import Button
+from diff_buttons import DiffButton
 
 class AlienInvasion:
 	"""overall class to manage game assets & behavior."""
@@ -19,6 +20,8 @@ class AlienInvasion:
 		self.settings = Settings()
 
 		self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+		self.screen_rect = self.screen.get_rect()
+
 		self.settings.screen_width = self.screen.get_rect().width
 		self.settings.screen_height = self.screen.get_rect().height #this code exists so we can use the screen's rect width/height to know what the screen width/height ends up being
 			#(self.settings.screen_width, self.settings.screen_height))
@@ -35,6 +38,12 @@ class AlienInvasion:
 
 		# Make the Play button
 		self.play_button = Button(self,"Play")
+
+		# Make difficulty buttons
+		self.hard_difficulty = DiffButton(self,"HARD MODE", 300, (self.screen_rect.height /2) - 100)
+		self.med_difficulty = DiffButton(self,"REGULAR MODE", 300, (self.screen_rect.height /2))
+		self.easy_difficulty = DiffButton(self,"EASY MODE", 300, (self.screen_rect.height /2) + 100)
+
 
 	def run_game(self):
 		""" start the main loop for the game"""
@@ -60,12 +69,27 @@ class AlienInvasion:
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 				mouse_pos = pygame.mouse.get_pos() # get and store mouse position
 				self._check_play_button(mouse_pos)
+				self._check_difficulty_buttons(mouse_pos)
 
 	def _check_play_button(self, mouse_pos):
 		""" Start a new game when the player clicks Play"""
 		button_clicked = self.play_button.rect.collidepoint(mouse_pos)
 		if button_clicked and not self.stats.game_active:
 			self._start_game()
+
+	def _check_difficulty_buttons(self, mouse_pos):
+		""" change difficulty settings when buttons are clicked"""
+		hard_button_clicked = self.hard_difficulty.rect.collidepoint(mouse_pos)
+		med_button_clicked = self.med_difficulty.rect.collidepoint(mouse_pos)
+		ez_button_clicked = self.easy_difficulty.rect.collidepoint(mouse_pos)
+
+		if hard_button_clicked and not self.stats.game_active:
+			self.settings.speedup_scale = 3
+			print("hard clicked")
+		if med_button_clicked and not self.stats.game_active:
+			self.settings.speedup_scale = 1.4
+		if ez_button_clicked and not self.stats.game_active:
+			self.settings.speedup_scale = 1.1
 
 	def _start_game(self):
 		# Reset the game stats
@@ -230,6 +254,9 @@ class AlienInvasion:
 		# Draw the play button if the game is inactive
 		if not self.stats.game_active:
 			self.play_button.draw_button()
+			self.easy_difficulty.draw_button()
+			self.med_difficulty.draw_button()
+			self.hard_difficulty.draw_button()
 
 		# make the most recently drawn screen visible
 		pygame.display.flip() 
