@@ -99,6 +99,7 @@ class AlienInvasion:
 		self.stats.reset_stats()
 		self.stats.game_active = True
 		self.scoreboard.prep_score()
+		self.scoreboard.prep_level()
 
 		# Get rid of any remaining aliens / bullets
 		self.aliens.empty()
@@ -190,6 +191,7 @@ class AlienInvasion:
 			for aliens in collisions.values(): #collisions store bullets as keys in collisions dictionaries
 				self.stats.score += self.settings.alien_points * len(aliens)
 			self.scoreboard.prep_score()
+			self.scoreboard.check_high_score()
 
 		if not self.aliens:
 			# destroy existing bullets and create new fleet
@@ -197,6 +199,9 @@ class AlienInvasion:
 			self.bullets.empty()
 			self._create_fleet()
 			self.settings.increase_speed()
+
+			self.stats.level += 1
+			self.scoreboard.prep_level()
 
 	def _ship_hit(self):
 		""" Respond to the ship being hit by an alien"""
