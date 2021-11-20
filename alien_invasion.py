@@ -86,10 +86,10 @@ class AlienInvasion:
 		ez_button_clicked = self.easy_difficulty.rect.collidepoint(mouse_pos)
 
 		if hard_button_clicked and not self.stats.game_active:
-			self.settings.speedup_scale = 3
+			self.settings.speedup_scale = 1.6
 			print("hard clicked")
 		if med_button_clicked and not self.stats.game_active:
-			self.settings.speedup_scale = 1.4
+			self.settings.speedup_scale = 1.3
 		if ez_button_clicked and not self.stats.game_active:
 			self.settings.speedup_scale = 1.1
 
